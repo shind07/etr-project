@@ -38,5 +38,7 @@ going to skip google sheets for now
 
 # 3 - improvement suggestions
 - RAG approach? LLM?
+- google sheets - depends who the end user is? could do a custom ui? effort vs reward?
 
 - skipping unit tests - not letting perfect be the enemy of good
+treating this like a hackathon wher eI dont get style points

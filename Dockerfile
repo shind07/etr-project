@@ -11,7 +11,9 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy all Python files
-COPY *.py .
+COPY pipeline pipeline/
 
 # Run the script when the container launches
-CMD ["python", "script.py"]
+CMD ["python", "pipeline/main.py"]
+
+    

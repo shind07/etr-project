@@ -115,31 +115,31 @@ setorder(alt_calc_data, Player, stat, percentile)
 
 ############### 03 - Save Data ###############
 
-# Load Necessary Packages
-library(googlesheets4)
-library(googledrive)
+  # Load Necessary Packages
+  library(googlesheets4)
+  library(googledrive)
 
 
-# Define ID of google sheet where data should be pushed
-sheet_url = "https://docs.google.com/spreadsheets/d/1W4PbX4QX9_nmQqzp6poIAgAb7wv1v7-1MKo0Ve_86gY/edit?gid=0#gid=0"
+  # Define ID of google sheet where data should be pushed
+  sheet_url = "https://docs.google.com/spreadsheets/d/1W4PbX4QX9_nmQqzp6poIAgAb7wv1v7-1MKo0Ve_86gY/edit?gid=0#gid=0"
 
 
-# Authenticate Google Account
-## NOTE: 
-# THE FIRST TIME YOU RUN THE CODE BELOW (OR ANYTHING FROM THE GOOGLESHEETS4 OR GOOGLEDRIVE PACKAGES) IT WILL ASK YOU TO CONFIRM ACCESS TO YOUR GOOGLE ACCOUNT. 
-# AFTER YOU ALLOW IT TO CONNECT TO A GOOGLE ACCOUNT, IT SHOULD ALLOW YOU TO ACCESS THE SHEET WITHOUT A PROBLEM
-# THE SHEET IS PUBLIC, SO ANYONE / ANY GOOGLE ACCOUNT SHOULD BE ABLE TO ACCESS IT
-# can specify like this to do it manually via broswer: gs4_auth()
-# or like this to pass an email: gs4_auth(email = "samw@establishtherun.com")
-gs4_auth()
+  # Authenticate Google Account
+  ## NOTE: 
+  # THE FIRST TIME YOU RUN THE CODE BELOW (OR ANYTHING FROM THE GOOGLESHEETS4 OR GOOGLEDRIVE PACKAGES) IT WILL ASK YOU TO CONFIRM ACCESS TO YOUR GOOGLE ACCOUNT. 
+  # AFTER YOU ALLOW IT TO CONNECT TO A GOOGLE ACCOUNT, IT SHOULD ALLOW YOU TO ACCESS THE SHEET WITHOUT A PROBLEM
+  # THE SHEET IS PUBLIC, SO ANYONE / ANY GOOGLE ACCOUNT SHOULD BE ABLE TO ACCESS IT
+  # can specify like this to do it manually via broswer: gs4_auth()
+  # or like this to pass an email: gs4_auth(email = "samw@establishtherun.com")
+  gs4_auth()
 
 
-# Clear Existing Data
-range_clear(ss = sheet_url, sheet = "raw_data", reformat = F)
+  # Clear Existing Data
+  range_clear(ss = sheet_url, sheet = "raw_data", reformat = F)
 
 
-# Write new data
-range_write(ss = sheet_url, sheet = "raw_data", reformat = F, data = alt_calc_data)
+  # Write new data
+  range_write(ss = sheet_url, sheet = "raw_data", reformat = F, data = alt_calc_data)
 
 
 ## Save Data Locally 
