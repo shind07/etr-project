@@ -13,6 +13,20 @@ A few logistical notes:
 - You may use any methods you'd like for #1 and #2, but please keep in mind that, eventually, we would like this to fit nicely on AWS in some capacity. 
 On #3 and #4, we're just asking for a paragraph or two description - we DO NOT EXPECT you to actually implement these ideas right now. 
 
+## User Guide
+
+1. Install Docker
+2. Copy the ETR_SimOutput_2024_15.parquet into the data directory
+3. Build and run the the docker image with `make build run`
+4. The output will be written to `data/percentiles_df.parquet`
+
+## Project Structure
+
+- `/pipeline` - python code the pipeline, with `main.py` as the entry point
+- `eda.ipynb` - a python notebook to explore the dataset
+- `Makefile` - shortcuts for building and runnign the Docker container
+- `requirements.txt` - requirements for running the code in either Docker or a venv
+
 ## Decision Journal
 
 ### Initial Steps
