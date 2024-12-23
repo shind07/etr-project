@@ -39,6 +39,20 @@ going to skip google sheets for now
 # 3 - improvement suggestions
 - RAG approach? LLM?
 - google sheets - depends who the end user is? could do a custom ui? effort vs reward?
+- pre compute standard queries as part of an etl pipeline
 
 - skipping unit tests - not letting perfect be the enemy of good
 treating this like a hackathon wher eI dont get style points
+
+Timing Summary:
+Processing time: 11.21 seconds
+Google operations time: 1.06 seconds
+Total runtime: 1.25 seconds
+
+Timing Summary:
+Processing time: 13.06 seconds
+Google operations time: 1.38 seconds
+Total runtime: 1.59 seconds
+
+takes a similar time, uses docker and python, much more extensible
+use spark

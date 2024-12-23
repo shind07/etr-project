@@ -1,4 +1,3 @@
-# For QBs
 qb_measure_cols = [
     "rush_yards",
     "rush_att",
@@ -13,10 +12,8 @@ qb_measure_cols = [
     "pass_rush_yards",
 ]
 
-# For pass catchers (WR, TE)
 pc_measure_cols = ["rec_yards", "catches", "targets", "rec_longest", "rec_rush_td"]
 
-# For RBs
 rb_measure_cols = [
     "rush_yards",
     "rush_att",

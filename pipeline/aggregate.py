@@ -1,4 +1,6 @@
 import numpy as np
+import time
+import logging
 
 
 def aggregate_percentiles(df, teams_not_started, percentile_seq):
@@ -21,7 +23,6 @@ def aggregate_percentiles(df, teams_not_started, percentile_seq):
         (Season, Week, GameSimID, Team, Opponent, Player, Position, GSISID, PlayerID).
         The result includes a 'percentile' column plus columns for each stat's quantiles.
     """
-
     # 1) Filter down to the teams we care about
     df_filtered = df[df["Team"].isin(teams_not_started)].copy()
 
@@ -61,9 +62,12 @@ def aggregate_percentiles(df, teams_not_started, percentile_seq):
 
     # 4) Group and calculate multiple quantiles in one pass
     #    This is much faster than manual loops or multiple calls.
+    start_time = time.time()
     result = df_filtered.groupby(group_cols)[cols_to_quantile].quantile(
         percentile_seq, interpolation="linear"
     )
+    end_time = time.time()
+    logging.info(f"Aggregation took: {end_time - start_time} seconds")
 
     # 5) Reset the index so that 'percentile' becomes a column instead of part of a MultiIndex
     result = result.reset_index()

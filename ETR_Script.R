@@ -1,6 +1,7 @@
 
 ############### 01 - Setup ###############
-start.time <- Sys.time()
+total.start.time <- Sys.time()
+processing.start.time <- Sys.time()
 
 
 # Define Path of File to be Loaded
@@ -112,8 +113,11 @@ alt_calc_data = rbindlist(list(alt_calc_data_qb, alt_calc_data_rb, alt_calc_data
 # Sort Data
 setorder(alt_calc_data, Player, stat, percentile)
 
+processing.end.time <- Sys.time()
+processing.time <- round(processing.end.time - processing.start.time, 2)
 
 ############### 03 - Save Data ###############
+google.start.time <- Sys.time()
 
   # Load Necessary Packages
   library(googlesheets4)
@@ -144,8 +148,16 @@ setorder(alt_calc_data, Player, stat, percentile)
 
 ## Save Data Locally 
 write_parquet(alt_calc_data, paste0(file_path, "ETR_SimPercentiles_2024_15.parquet"))
+google.end.time <- Sys.time()
+google.time <- round(google.end.time - google.start.time, 2)
 
-end.time <- Sys.time()
-time.taken <- round(end.time - start.time,2)
-time.taken
+# Calculate total time
+total.end.time <- Sys.time()
+total.time <- round(total.end.time - total.start.time, 2)
+
+# Print timing summary
+cat("\nTiming Summary:\n")
+cat("Processing time:", processing.time, "seconds\n")
+cat("Google operations time:", google.time, "seconds\n")
+cat("Total runtime:", total.time, "seconds\n")
 

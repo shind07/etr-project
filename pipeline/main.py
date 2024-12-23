@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 
 from aggregate import aggregate_percentiles
+from aggregate_polars import aggregate_percentiles_polars
 from utils import (
     filter_unique_players,
     get_team_not_started,
@@ -82,7 +83,6 @@ def main():
 
     total_time = time.time() - start_time
     logging.info(f"Total time taken: {total_time} seconds")
-
 
 if __name__ == "__main__":
     main()
