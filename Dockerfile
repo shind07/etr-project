@@ -15,5 +15,3 @@ COPY pipeline pipeline/
 
 # Run the script when the container launches
 CMD ["python", "pipeline/main.py"]
-
-    
