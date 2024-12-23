@@ -6,10 +6,12 @@ WORKDIR /app
 
 # Copy the requirements file and the Python script into the container
 COPY requirements.txt .
-COPY script.py .
 
 # Install the required packages
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy all Python files
+COPY *.py .
 
 # Run the script when the container launches
 CMD ["python", "script.py"]

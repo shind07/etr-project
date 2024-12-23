@@ -25,3 +25,10 @@ On #3 and #4, we're just asking for a paragraph or two description - we DO NOT E
 - First, get it working in python
 - Then, make it fast
 - Finally, make it pretty
+- Move it into Docker so it runs easily
+- Set up makefile
+- Run it on AWS?
+
+
+## Stats
+- R baseline - roughly a minute or so, time by hand

@@ -1,9 +1,10 @@
 
 ############### 01 - Setup ###############
+start.time <- Sys.time()
 
 
 # Define Path of File to be Loaded
-file_path = "./data/"
+file_path = "~/Downloads/"
 
 
 # Load Packages
@@ -144,5 +145,7 @@ range_write(ss = sheet_url, sheet = "raw_data", reformat = F, data = alt_calc_da
 ## Save Data Locally 
 write_parquet(alt_calc_data, paste0(file_path, "ETR_SimPercentiles_2024_15.parquet"))
 
-
+end.time <- Sys.time()
+time.taken <- round(end.time - start.time,2)
+time.taken
 
