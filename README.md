@@ -29,6 +29,14 @@ On #3 and #4, we're just asking for a paragraph or two description - we DO NOT E
 - Set up makefile
 - Run it on AWS?
 
+going to skip google sheets for now
 
 ## Stats
 - R baseline - roughly a minute or so, time by hand
+- Python: took about 17 seconds, 9 GB of RAM per Docker
+
+
+# 3 - improvement suggestions
+- RAG approach? LLM?
+
+- skipping unit tests - not letting perfect be the enemy of good
