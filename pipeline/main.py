@@ -50,36 +50,36 @@ def main():
     percentiles_df = sort_percentiles(percentiles_df)
     unique_players = filter_unique_players(percentiles_df)
 
-    alt_calc_data_qb = melt_position_data(
+    qb_data = melt_position_data(
         df=percentiles_df,
         unique_players=unique_players,
         positions=["QB"],
         measure_vars=qb_measure_cols,
     )
 
-    alt_calc_data_pc = melt_position_data(
+    pc_data = melt_position_data(
         df=percentiles_df,
         unique_players=unique_players,
         positions=["WR", "TE"],
         measure_vars=pc_measure_cols,
     )
 
-    alt_calc_data_rb = melt_position_data(
+    rb_data = melt_position_data(
         df=percentiles_df,
         unique_players=unique_players,
         positions=["RB"],
         measure_vars=rb_measure_cols,
     )
 
-    alt_calc_data = pd.concat(
-        [alt_calc_data_qb, alt_calc_data_pc, alt_calc_data_rb], ignore_index=True
+    final_data = pd.concat(
+        [qb_data, pc_data, rb_data], ignore_index=True
     )
 
-    alt_calc_data.sort_values(by=["Player", "stat", "percentile"], inplace=True)
-    alt_calc_data.reset_index(drop=True, inplace=True)
+    final_data.sort_values(by=["Player", "stat", "percentile"], inplace=True)
+    final_data.reset_index(drop=True, inplace=True)
 
     # Save the result to a CSV file
-    alt_calc_data.to_parquet("data/percentiles_df.parquet", index=False)
+    final_data.to_parquet("data/percentiles_df.parquet", index=False)
 
     total_time = time.time() - start_time
     logging.info(f"Total time taken: {total_time} seconds")
