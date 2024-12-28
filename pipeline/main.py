@@ -53,7 +53,7 @@ def main():
 
     percentiles = get_percentiles()
     aggregate_start_time = time.time()
-    percentiles_df = aggregate_percentiles(df, percentiles)
+    percentiles_df = aggregate_percentiles_parallel(df, percentiles)
     logging.info(f"Aggregate took: {time.time() - aggregate_start_time} seconds")
     percentiles_df.fillna(0, inplace=True)
     percentiles_df = round_numeric_columns(percentiles_df)

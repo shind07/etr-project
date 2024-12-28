@@ -16,14 +16,12 @@ def aggregate_percentiles_parallel(df, percentiles):
     logging.info(f"Aggregating percentiles in parallel with {n_cpus} processes")
     teams = df["Team"].unique()
     team_chunks = np.array_split(teams, n_cpus)
-
-    # Add logging to see chunk sizes
     for i, chunk in enumerate(team_chunks):
         logging.info(f"Chunk {i} size: {len(chunk)} teams: {chunk.tolist()}")
 
     with Pool(processes=n_cpus) as pool:
         results = pool.starmap(
-            aggregate_percentiles_worker,  # Use a wrapper function
+            aggregate_percentiles_worker,
             [
                 (df[df["Team"].isin(chunk)], percentiles, i)
                 for i, chunk in enumerate(team_chunks)
