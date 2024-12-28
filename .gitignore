@@ -1,6 +1,8 @@
 data/*.parquet
 data/*.csv
 
+ETR_Script.R
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

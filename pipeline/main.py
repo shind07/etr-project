@@ -28,9 +28,11 @@ def load_data():
     """
     Load the data from the parquet file.
     """
+    load_start_time = time.time()
     df = pd.read_parquet(f"{DATA_DIRECTORY}/ETR_SimOutput_2024_15.parquet")
     logging.info(f"Loaded {df.shape[0]} rows and {df.shape[1]} columns")
     logging.info(f"Size of df: {df.memory_usage().sum() / 1024 ** 3} GB")
+    logging.info(f"Load took: {time.time() - load_start_time} seconds")
     return df
 
 
@@ -39,17 +41,17 @@ def main():
     start_time = time.time()
     df = load_data()
 
-    team_not_started = get_team_not_started(df)
-    logging.info(f"Teams not started: {team_not_started}")
+    teams_not_started = get_team_not_started(df)
+    df = df[df["Team"].isin(teams_not_started)]
 
     percentiles = get_percentiles()
-
-    percentiles_df = aggregate_percentiles(df, team_not_started, percentiles)
-
+    percentiles_df = aggregate_percentiles(df, percentiles)
+    percentiles_df.fillna(0, inplace=True)
     percentiles_df = round_numeric_columns(percentiles_df)
     percentiles_df = sort_percentiles(percentiles_df)
     unique_players = filter_unique_players(percentiles_df)
 
+    melt_start_time = time.time()
     qb_data = melt_position_data(
         df=percentiles_df,
         unique_players=unique_players,
@@ -70,19 +72,18 @@ def main():
         positions=["RB"],
         measure_vars=rb_measure_cols,
     )
+    logging.info(f"Melt took: {time.time() - melt_start_time} seconds")
 
-    final_data = pd.concat(
-        [qb_data, pc_data, rb_data], ignore_index=True
-    )
-
+    postprocess_start_time = time.time()
+    final_data = pd.concat([qb_data, pc_data, rb_data], ignore_index=True)
     final_data.sort_values(by=["Player", "stat", "percentile"], inplace=True)
     final_data.reset_index(drop=True, inplace=True)
+    logging.info(f"Postprocess took: {time.time() - postprocess_start_time} seconds")
 
-    # Save the result to a CSV file
+    save_start_time = time.time()
     final_data.to_parquet("data/percentiles_df.parquet", index=False)
-
-    total_time = time.time() - start_time
-    logging.info(f"Total time taken: {total_time} seconds")
+    logging.info(f"Save took: {time.time() - save_start_time} seconds")
+    logging.info(f"Total time taken: {time.time() - start_time} seconds")
 
 
 if __name__ == "__main__":
