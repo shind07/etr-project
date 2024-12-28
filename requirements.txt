@@ -4,3 +4,4 @@ fastparquet
 numpy
 pytest
 polars
+s3fs

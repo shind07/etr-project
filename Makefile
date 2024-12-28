@@ -11,7 +11,7 @@ build:
 
 # Run the container
 run:
-	docker run -v $(PWD)/data:/app/data $(IMAGE_NAME)
+	docker run -v $(PWD)/data:/app/data -v $(HOME)/.aws:/root/.aws $(IMAGE_NAME)
 
 # Build and run in one command
 all: build run

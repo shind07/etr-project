@@ -4,7 +4,7 @@ import time
 import pandas as pd
 import numpy as np
 
-from aggregate import aggregate_percentiles
+from aggregate import aggregate_percentiles, aggregate_percentiles_parallel
 from aggregate_polars import aggregate_percentiles_polars
 from utils import (
     filter_unique_players,
@@ -22,6 +22,8 @@ logging.basicConfig(
 )
 
 DATA_DIRECTORY = "data"
+S3_BUCKET = "etr-data-lhlithmw"
+ENVIRONMENT = "local"
 
 
 def load_data():
@@ -29,7 +31,12 @@ def load_data():
     Load the data from the parquet file.
     """
     load_start_time = time.time()
-    df = pd.read_parquet(f"{DATA_DIRECTORY}/ETR_SimOutput_2024_15.parquet")
+
+    if ENVIRONMENT == "local":
+        df = pd.read_parquet(f"{DATA_DIRECTORY}/ETR_SimOutput_2024_15.parquet")
+    else:
+        df = pd.read_parquet(f"s3://{S3_BUCKET}/input/ETR_SimOutput_2024_15.parquet")
+
     logging.info(f"Loaded {df.shape[0]} rows and {df.shape[1]} columns")
     logging.info(f"Size of df: {df.memory_usage().sum() / 1024 ** 3} GB")
     logging.info(f"Load took: {time.time() - load_start_time} seconds")
@@ -37,7 +44,7 @@ def load_data():
 
 
 def main():
-    logging.info("Starting pipeline")
+    logging.info(f"Starting pipeline in {ENVIRONMENT} environment")
     start_time = time.time()
     df = load_data()
 
@@ -45,7 +52,9 @@ def main():
     df = df[df["Team"].isin(teams_not_started)]
 
     percentiles = get_percentiles()
+    aggregate_start_time = time.time()
     percentiles_df = aggregate_percentiles(df, percentiles)
+    logging.info(f"Aggregate took: {time.time() - aggregate_start_time} seconds")
     percentiles_df.fillna(0, inplace=True)
     percentiles_df = round_numeric_columns(percentiles_df)
     percentiles_df = sort_percentiles(percentiles_df)
@@ -81,7 +90,13 @@ def main():
     logging.info(f"Postprocess took: {time.time() - postprocess_start_time} seconds")
 
     save_start_time = time.time()
-    final_data.to_parquet("data/percentiles_df.parquet", index=False)
+
+    if ENVIRONMENT == "local":
+        final_data.to_parquet("data/percentiles_df.parquet", index=False)
+    else:
+        final_data.to_parquet(
+            f"s3://{S3_BUCKET}/output/percentiles_df.parquet", index=False
+        )
     logging.info(f"Save took: {time.time() - save_start_time} seconds")
     logging.info(f"Total time taken: {time.time() - start_time} seconds")
 

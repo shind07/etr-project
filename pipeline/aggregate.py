@@ -1,11 +1,59 @@
 import logging
+import os
+from multiprocessing import Pool
 import time
+
+
+import numpy as np
+import pandas as pd
+
+
+def aggregate_percentiles_parallel(df, percentiles):
+    """
+    Aggregates simulation data at multiple percentiles for each player/team.
+    """
+    n_cpus = os.cpu_count()
+    logging.info(f"Aggregating percentiles in parallel with {n_cpus} processes")
+    teams = df["Team"].unique()
+    team_chunks = np.array_split(teams, n_cpus)
+
+    # Add logging to see chunk sizes
+    for i, chunk in enumerate(team_chunks):
+        logging.info(f"Chunk {i} size: {len(chunk)} teams: {chunk.tolist()}")
+
+    with Pool(processes=n_cpus) as pool:
+        results = pool.starmap(
+            aggregate_percentiles_worker,  # Use a wrapper function
+            [
+                (df[df["Team"].isin(chunk)], percentiles, i)
+                for i, chunk in enumerate(team_chunks)
+            ],
+        )
+
+    logging.info(f"Combining results from {n_cpus} processes")
+    combined_df = pd.concat(results, ignore_index=True)
+    return combined_df
+
+
+def aggregate_percentiles_worker(df, percentiles, worker_id):
+    """
+    Wrapper function for aggregate_percentiles that adds logging.
+    """
+    logging.info(f"Worker {worker_id} starting with {len(df)} rows")
+    start_time = time.time()
+    result = aggregate_percentiles(df, percentiles)
+    logging.info(
+        f"Worker {worker_id} finished in {time.time() - start_time:.2f} seconds"
+    )
+    return result
+
 
 def aggregate_percentiles(df, percentiles):
     """
     Aggregates simulation data at multiple percentiles for each player/team.
     """
-    start_time = time.time()
+    logging.info(f"Processing chunk with shape: {df.shape}")
+    logging.info(f"Aggregating percentiles...")
     cols_to_quantile = [
         "sim_pass_attempts",
         "sim_comp",
@@ -38,15 +86,17 @@ def aggregate_percentiles(df, percentiles):
         "PlayerID",
     ]
 
-    df_percentiles = df.groupby(group_cols)[cols_to_quantile].quantile(
-        percentiles, interpolation="linear"
-    ).reset_index()
+    df_percentiles = (
+        df.groupby(group_cols)[cols_to_quantile]
+        .quantile(percentiles, interpolation="linear")
+        .reset_index()
+    )
     rename_dict = {
         col: "percentile" for col in df_percentiles.columns if col.startswith("level_")
     }
     df_percentiles.rename(columns=rename_dict, inplace=True)
-    logging.info(f"Aggregate took: {time.time() - start_time} seconds")
     return rename_columns(df_percentiles)
+
 
 def rename_columns(df):
     """
