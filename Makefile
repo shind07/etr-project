@@ -37,3 +37,12 @@ push: build ecr-login
 
 upload-data:
 	aws s3 cp data/ETR_SimOutput_2024_15.parquet s3://$(S3_BUCKET)/input/
+
+plan:
+	terraform -chdir=terraform plan
+
+apply:
+	terraform -chdir=terraform apply
+
+destroy:
+	terraform -chdir=terraform destroy
