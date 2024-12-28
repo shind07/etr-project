@@ -3,6 +3,7 @@ data/*.csv
 
 ETR_Script.R
 
+terraform/.terraform/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

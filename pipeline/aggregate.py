@@ -1,9 +1,6 @@
 import logging
 import time
 
-import numpy as np
-
-
 def aggregate_percentiles(df, percentiles):
     """
     Aggregates simulation data at multiple percentiles for each player/team.
